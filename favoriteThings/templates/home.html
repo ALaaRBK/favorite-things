@@ -24,7 +24,14 @@
                     <td>{{favorite.meta_data}}</td>
                     <td>{{favorite.updateAt.strftime('%Y-%m-%d %H:%M')}}</td>
                     <td>{{favorite.createdAt.strftime('%Y-%m-%d %H:%M')}}</td>
-
+                    {% if current_user.id == favorite.user_id %}
+                    <td><form action="{{ url_for('deleteFavoriteThing',thing_id=favorite.id) }}" method="POST">
+                        <input class="btn btn-danger btn-xs" value="Delete"  type="submit"></td>
+                    </form>   
+                    <td>
+                      <a class="btn btn-primary btn-xs" href="{{ url_for('updateFavoriteThing',thing_id=favorite.id) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                    </td>
+                    {% endif %}
                 </tr>
                 {%endfor%}
               </tbody>

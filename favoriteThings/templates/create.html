@@ -116,7 +116,15 @@
               <button type="button" id="addCategory"  class="btn btn-primary">Save changes</button>
             </div>
             </form>
-
+            <ul class="list-group">
+                    {% for category  in categories %}
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                              {{category.name}}
+                              <i class="fal fa-trash-alt"></i>
+                        <span class="badge"><a href="{{url_for('deleteCategory',category_id=category.id)}}" class="btn btn-danger btn-xs close-btn delete-order"><i class="fa fa-times" aria-hidden="true"></i></a href="url_for('deleteCategory',"></i></span>
+                      </li>
+                      {% endfor %}
+                </ul>
           </div>
         </div>
       </div>

@@ -60,10 +60,12 @@ def create():
             return redirect(url_for('home'))
     form = Create()
     create_category=CreateCategory()
+    # this section of getting categories to list them in the popup  
     categories =Categories.query.filter_by(user_id=current_user.id).all()
     categoriesList = []
     for category in categories:
         categoriesList.append((category.name,category.name))
+    #here we check if category is None because we can't validate in the validation method(we fill category from routes) 
     if form.validate_on_submit() or (form.category.data is not None and request.method == 'POST'):
         category = Categories.query.filter_by(name=form.category.data).first()
         if form.description.data and len(form.description.data) < 10:
@@ -76,6 +78,54 @@ def create():
         return redirect(next_page) if next_page else redirect(url_for('home'))
     form.category.choices = categoriesList
     return render_template('create.html',title='Create',form=form,categoryForm=create_category,categories=categories)
+
+@app.route('/delete/<int:thing_id>',methods=['POST'])
+@login_required
+def deleteFavoriteThing(thing_id):
+    if not current_user.is_authenticated:
+            return redirect(url_for('home'))
+    favoriteThing = Favorites.query.get_or_404(thing_id)
+    if favoriteThing.user_id != current_user.id:
+        abort(403)
+    db.session.delete(favoriteThing)
+    db.session.commit() 
+    flash('Deleted Successfuly','success')
+    return redirect(url_for('home'))
+
+
+@app.route('/update/<int:thing_id>',methods=['POST','GET'])
+@login_required
+def updateFavoriteThing(thing_id):
+    if not current_user.is_authenticated:
+            return redirect(url_for('home'))
+    favoriteThing = Favorites.query.get_or_404(thing_id)
+    # this section of getting categories to list them in the popup  
+    categories = Categories.query.filter_by(user_id=current_user.id).all()
+    categoriesList = []
+    for category in categories:
+        categoriesList.append((category.name,category.name))
+    form = Create()
+    create_category=CreateCategory()
+    if request.method == 'POST':
+        # here we check if category is None because we can't validate in the validation method(we fill category from routes)
+        if form.validate_on_submit() or form.category.data != None:
+            category = Categories.query.filter_by(name=form.category.data).first()
+            favoriteThing.title=form.title.data
+            favoriteThing.description=form.description.data
+            favoriteThing.meta_data=form.metadata.data
+            favoriteThing.user_id=current_user.id
+            favoriteThing.updateAt=datetime.utcnow()
+            favoriteThing.rate=category.rate
+            db.session.commit()
+            next_page = request.args.get('next')
+            return redirect(next_page) if next_page else redirect(url_for('home'))
+        return render_template('create.html',title='Create',form=form,categoryForm=create_category,categories=categories)            
+    else:
+        form.title.data = favoriteThing.title
+        form.description.data = favoriteThing.description
+        form.category.choices = categoriesList
+        form.category.data = favoriteThing.group.name
+        return render_template('create.html',title='Update',form=form,favoriteThing=favoriteThing,categoryForm=create_category,categories=categories)
 
 
 @app.route('/createCategory',methods=['POST'])
@@ -91,3 +141,28 @@ def createCategory():
         db.session.commit()
         return jsonify(success=True) 
     return  jsonify(success=False)
+
+@app.route('/deleteCategory/<int:category_id>')
+@login_required
+def deleteCategory(category_id):
+    if not current_user.is_authenticated:
+            return redirect(url_for('home'))
+    category = Categories.query.get_or_404(category_id)
+    if category.user_id != current_user.id:
+        abort(403)
+    db.session.delete(category)
+    db.session.commit() 
+    flash('Deleted Successfuly','success')
+    return redirect(url_for('create'))
+
+@app.route('/getCategories',methods=['GET'])
+@login_required
+def getCategories():
+    if not current_user.is_authenticated:
+            return redirect(url_for('home'))
+    categories = Categories.query.filter_by(user_id=current_user.id).all()
+    selectcategories = [];
+    for category in categories:
+        selectcategories.append((category.name,category.name))
+    return jsonify(success=True,categories=selectcategories) 
+    
