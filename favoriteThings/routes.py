@@ -1,6 +1,6 @@
 from flask import render_template,Flask,url_for,redirect,flash,request,jsonify
 from favoriteThings import app,bcrypt,db
-from favoriteThings.models import User,Favorites,Categories
+from favoriteThings.models import User,Favorites,Categories,AuditLog
 from favoriteThings.forms import RegistrationForm,LoginForm,Create,CreateCategory
 from flask_login import login_user,current_user,logout_user,login_required
 from datetime import datetime
@@ -44,7 +44,9 @@ def login():
         if user and bcrypt.check_password_hash(user.password,form.password.data):
             login_user(user)
             next_page = request.args.get('next')
-            flash('Login Successful','success')        
+            flash('Login Successful','success')
+            log = 'Logged in on!'
+            addLog(log)       
             return redirect(next_page) if next_page else redirect(url_for('home'))
         flash('Login Unsuccessful. please check email and password','danger')
     return render_template('login.html',title='Login',form=form)
@@ -76,8 +78,12 @@ def create():
         db.session.add(favoriteThing)
         db.session.commit()
         next_page = request.args.get('next')
+        log = f'Add {favoriteThing.title} to favorite list on!'
+        addLog(log)
         return redirect(next_page) if next_page else redirect(url_for('home'))
     form.category.choices = categoriesList
+    log = 'open create form on'
+    addLog(log)
     return render_template('create.html',title='Create',form=form,categoryForm=create_category,categories=categories)
 
 @app.route('/delete/<int:thing_id>',methods=['POST'])
@@ -91,6 +97,8 @@ def deleteFavoriteThing(thing_id):
     db.session.delete(favoriteThing)
     db.session.commit() 
     flash('Deleted Successfuly','success')
+    log = f'Deleted {favoriteThing.title} from favorite list on'
+    addLog(log)
     return redirect(url_for('home'))
 
 
@@ -119,6 +127,8 @@ def updateFavoriteThing(thing_id):
             favoriteThing.rate=category.rate
             db.session.commit()
             next_page = request.args.get('next')
+            log = f'Update {form.title.data} from favorite list on'
+            addLog(log)
             return redirect(next_page) if next_page else redirect(url_for('home'))
         return render_template('create.html',title='Create',form=form,categoryForm=create_category,categories=categories)            
     else:
@@ -126,6 +136,8 @@ def updateFavoriteThing(thing_id):
         form.description.data = favoriteThing.description
         form.category.choices = categoriesList
         form.category.data = favoriteThing.group.name
+        log = f'Open {form.title.data} to Update it on'
+        addLog(log)
         return render_template('create.html',title='Update',form=form,favoriteThing=favoriteThing,categoryForm=create_category,categories=categories)
 
 
@@ -140,6 +152,8 @@ def createCategory():
         new = Categories(name=newCategory,user_id=current_user.id,rate=rate)
         db.session.add(new)
         db.session.commit()
+        log = f'Add  {newCategory} to category list  on'
+        addLog(log)
         return jsonify(success=True) 
     return  jsonify(success=False)
 
@@ -154,6 +168,8 @@ def deleteCategory(category_id):
     db.session.delete(category)
     db.session.commit() 
     flash('Deleted Successfuly','success')
+    log = f'Delete  {category.name} from category list  on'
+    addLog(log)
     return redirect(url_for('create'))
 
 @app.route('/getCategories',methods=['GET'])
@@ -167,3 +183,15 @@ def getCategories():
         selectcategories.append((category.name,category.name))
     return jsonify(success=True,categories=selectcategories) 
     
+@app.route('/log',methods=['GET'])
+def log():
+    logs = AuditLog.query.filter_by(user_id=current_user.id).all()
+    log = 'Open logs tab on'
+    addLog(log)
+    return render_template('log.html',logs=logs)
+
+def addLog(log):
+    log = log + ' ' + datetime.utcnow().strftime('%Y-%m-%d %H:%M')
+    newLog = AuditLog(log=log,user_id=current_user.id)
+    db.session.add(newLog)
+    db.session.commit()

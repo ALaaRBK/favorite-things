@@ -13,6 +13,8 @@ class User(db.Model,UserMixin):
     password=db.Column(db.String(60),nullable=False)
     favorite = db.relationship('Favorites',backref='auther',lazy=True)
     category = db.relationship('Categories',backref='auther',lazy=True)
+    log = db.relationship('AuditLog',backref='auther',lazy=True)
+
     def __repr__(self):
         return f"User('{self.username}','{self.email}')"
 
@@ -37,3 +39,11 @@ class Categories(db.Model):
     favorites = db.relationship('Favorites',backref='group',lazy=True)
     def __repr__(self):
         return f"Categories('{self.name}','{self.rate}')"
+
+class AuditLog(db.Model):
+    id=db.Column(db.Integer,primary_key=True)
+    log=db.Column(db.String(20),nullable=False)
+    user_id = db.Column(db.Integer,db.ForeignKey('user.id'),nullable=False)
+
+    def __repr__(self):
+        return f"AuditLog('{self.log}')"

@@ -1,0 +1,11 @@
+{% extends "index.html" %}
+{% block content %}
+
+<ul class="list-group list-group-flush">
+    {% for log in logs  %}
+        <li class="list-group-item">{{log.log}}</li>
+        {% endfor %}
+      </ul>
+
+
+{% endblock content%}
