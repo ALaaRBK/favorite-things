@@ -1,0 +1,33 @@
+{% extends "index.html"%}
+{% block content%} 
+    <table class="table">
+            <thead class="thead-dark">
+              <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Category</th>
+                <th>Rank</th>
+                <th>Metadata</th>
+                <th>UpdateAt</th>
+                <th>createdAt</th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for favorite in favorites%}
+                <tr>
+                    <td>{{favorite.title}}</td>
+                    <td>{{favorite.description}}</td>
+                    <td>{{favorite.group.name}}</td>
+                    <td>{{favorite.group.rate}}</td>
+                    <td>{{favorite.meta_data}}</td>
+                    <td>{{favorite.updateAt.strftime('%Y-%m-%d %H:%M')}}</td>
+                    <td>{{favorite.createdAt.strftime('%Y-%m-%d %H:%M')}}</td>
+
+                </tr>
+                {%endfor%}
+              </tbody>
+            </table>
+    {% endblock %}
+

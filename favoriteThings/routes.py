@@ -1,13 +1,17 @@
-from flask import render_template,Flask,url_for,redirect,flash,request
+from flask import render_template,Flask,url_for,redirect,flash,request,jsonify
 from favoriteThings import app,bcrypt,db
-from favoriteThings.models import User,Favorites
-from favoriteThings.forms import RegistrationForm,LoginForm
+from favoriteThings.models import User,Favorites,Categories
+from favoriteThings.forms import RegistrationForm,LoginForm,Create,CreateCategory
 from flask_login import login_user,current_user,logout_user,login_required
+from datetime import datetime
+
 
 @app.route('/')
 @login_required
 def home():
-    return render_template('index.html',title='Favorite Things')
+    favorites = Favorites.query.order_by(Favorites.rate.desc())
+    return render_template('home.html',favorites=favorites)
+
 
 @app.route('/about')
 def about():
@@ -49,4 +53,41 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
+@app.route('/create',methods=['POST','GET'])
+@login_required
+def create():
+    if not current_user.is_authenticated:
+            return redirect(url_for('home'))
+    form = Create()
+    create_category=CreateCategory()
+    categories =Categories.query.filter_by(user_id=current_user.id).all()
+    categoriesList = []
+    for category in categories:
+        categoriesList.append((category.name,category.name))
+    if form.validate_on_submit() or (form.category.data is not None and request.method == 'POST'):
+        category = Categories.query.filter_by(name=form.category.data).first()
+        if form.description.data and len(form.description.data) < 10:
+            form.description.errors.append('Description Field must be minimum 10 and 20 characters long')
+            return render_template('create.html',title='Create',form=form,categoryForm=CreateCategory,categories=categories)
+        favoriteThing = Favorites(title=form.title.data,description=form.description.data,meta_data=form.metadata.data,user_id=current_user.id,createdAt=datetime.utcnow(),group=category)
+        db.session.add(favoriteThing)
+        db.session.commit()
+        next_page = request.args.get('next')
+        return redirect(next_page) if next_page else redirect(url_for('home'))
+    form.category.choices = categoriesList
+    return render_template('create.html',title='Create',form=form,categoryForm=create_category,categories=categories)
 
+
+@app.route('/createCategory',methods=['POST'])
+@login_required
+def createCategory():
+    if not current_user.is_authenticated:
+            return redirect(url_for('home'))
+    newCategory = request.form.get('category')
+    rate = int(float(request.form.get('rate')))
+    if newCategory:
+        new = Categories(name=newCategory,user_id=current_user.id,rate=rate)
+        db.session.add(new)
+        db.session.commit()
+        return jsonify(success=True) 
+    return  jsonify(success=False)

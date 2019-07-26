@@ -1,0 +1,125 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="content-section">
+    <form action="" method="POST">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">{{title}}</legend>
+            <div class="form-group">
+                    {{form.title.label(class="form-control-label")}}
+                    {% if form.title.errors %}
+                    {{form.title(class="form-control is-invalid")}}
+                    <div class="invalid-feedback">
+                        {% for error  in form.title.errors %}.
+                        <span> {{error}} </span>
+                        {%endfor%}
+                    </div>
+                    {% else %}
+                    {{form.title(class="form-control")}}
+                    {% endif %}
+            </div>
+            <div class="form-group">
+                    {{form.description.label(class="form-control-label")}}
+                    {% if form.description.errors %}
+                    {{form.description(class="form-control is-invalid")}}
+                    <div class="invalid-feedback">
+                        {% for error  in form.description.errors %}.
+                        <span> {{error}} </span>
+                        {%endfor%}
+                    </div>
+                    {% else %}
+                    {{form.description(class="form-control")}}
+                    {% endif %}
+            </div>
+            <div class="form-group">
+                    {{form.metadata.label(class="form-control-label")}}
+                    {% if form.metadata.errors %}
+                    {{form.metadata(class="form-control is-invalid")}}
+                    <div class="invalid-feedback">
+                        {% for error  in form.metadata.errors %}.
+                        <span> {{error}} </span>
+                        {%endfor%}
+                    </div>
+                    {% else %}
+                    {{form.metadata(class="form-control")}}
+                    {% endif %}
+            </div>
+            <div class="form-group">
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createCategory">
+                            Add New Category
+                    </button>
+            </div>
+            <div class="form-group">
+                    {{form.category.label(class="form-control-label")}}
+                    {% if form.category.errors %}
+                    {{form.category(class="form-control is-invalid")}}
+                    <div class="invalid-feedback">
+                        {% for error  in form.category.errors %}.
+                        <span> {{error}} </span>
+                        {%endfor%}
+                    </div>
+                    {% else %}
+                    {{form.category(class="form-control")}}
+                    {% endif %}
+            </div>
+        </fieldset>
+        <div class="form-group">
+            {{form.submit(class="btn btn-primary")}}
+        </div>
+    </form>
+
+</div>
+     
+      <!-- Modal -->
+      <div class="modal fade" id="createCategory" tabindex="-1" role="dialog" aria-labelledby="createCategoryLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="createCategoryLabel">Add Category</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form action="" method="POST">
+            {{ categoryForm.hidden_tag() }}
+            <div class="modal-body">
+                    {{categoryForm.newCategory.label(class="categoryForm-control-label")}}
+                    {% if categoryForm.newCategory.errors %}
+                    {{categoryForm.newCategory(class="categoryForm-control is-invalid")}}
+                    <div class="invalid-feedback">
+                        {% for error  in categoryForm.newCategory.errors %}.
+                        <span> {{error}} </span>
+                        {%endfor%}
+                    </div>
+                    {% else %}
+                    {{categoryForm.newCategory(class="categoryForm-control")}}
+                    {% endif %}
+            </div>
+            <div class="form-group">
+                    {{categoryForm.rate.label(class="form-control-label")}}
+                    {% if categoryForm.rate.errors %}
+                    {{categoryForm.rate(class="form-control is-invalid")}}
+                    <div class="invalid-feedback">
+                        {% for error  in categoryForm.rate.errors %}.
+                        <span> {{error}} </span>
+                        {%endfor%}
+                    </div>
+                    {% else %}
+                    {{categoryForm.rate(class="form-control")}}
+                    {% endif %}
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <!-- {{categoryForm.submit(class="btn btn-primary")}} -->
+              <button type="button" id="addCategory"  class="btn btn-primary">Save changes</button>
+            </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+ <script type="text/javascript" src="{{ url_for('static', filename='index.js') }}"></script>
+
+{% endblock content%}

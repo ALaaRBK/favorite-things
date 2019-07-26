@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField,PasswordField,SubmitField,BooleanField
-from wtforms.validators import DataRequired,Length,Email,ValidationError
+from wtforms import StringField,PasswordField,SubmitField,BooleanField,TextAreaField,SelectField,IntegerField
+from wtforms.validators import DataRequired,Length,Email,ValidationError,NumberRange
 from favoriteThings.models import User
 
 class RegistrationForm(FlaskForm):
@@ -30,3 +30,23 @@ class LoginForm(FlaskForm):
                             validators=[DataRequired()])
     remmber = BooleanField('Remmber Me')
     submit = SubmitField('Login')
+
+class Create(FlaskForm):
+    title = StringField("Name",
+                        validators=[DataRequired(),Length(min=2,max=20)])
+    description = TextAreaField("Description",
+                            validators=[Length(0,150)])
+    metadata = TextAreaField("Metadata",
+                            validators=[Length(0,150)])
+    category=SelectField("Category",
+                        validators=[DataRequired()],choices = [])
+    newCategory = StringField("New Category")
+    
+    submit = SubmitField('Add')
+
+
+class CreateCategory(FlaskForm):
+    newCategory = StringField("New Category",validators=[DataRequired()])
+    rate = IntegerField("Rate",
+                        validators=[DataRequired(),NumberRange(min=1)])
+    submit = SubmitField('Add')
