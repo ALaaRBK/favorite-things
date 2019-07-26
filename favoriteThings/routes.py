@@ -9,7 +9,8 @@ from datetime import datetime
 @app.route('/')
 @login_required
 def home():
-    favorites = Favorites.query.order_by(Favorites.rate.desc())
+    page = request.args.get('page',1,type=int)
+    favorites = Favorites.query.order_by(Favorites.rate.desc()).paginate(per_page=10,page=page)
     return render_template('home.html',favorites=favorites)
 
 
