@@ -26,7 +26,7 @@ class Favorites(db.Model):
     user_id = db.Column(db.Integer,db.ForeignKey('user.id'),nullable=False)
     updateAt = db.Column(db.DateTime,nullable=False,default=datetime.utcnow)
     meta_data= db.Column(db.String(),nullable=True)
-    rate = db.Column(db.Integer,db.ForeignKey('categories.rate'),nullable=False)
+    category = db.Column(db.Integer,db.ForeignKey('categories.id'),nullable=False)
 
 
     def __repr__(self):

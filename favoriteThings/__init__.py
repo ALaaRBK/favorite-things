@@ -19,6 +19,7 @@ def create_app(config_class=Config):
     login_manager.init_app(app)
     db.init_app(app)
     bcrypt.init_app(app)
+
     from favoriteThings.users.routes import users
     from favoriteThings.favorites.routes import favorites
     from favoriteThings.categories.routes import categories
