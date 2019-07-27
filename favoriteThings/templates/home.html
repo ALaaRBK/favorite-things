@@ -25,11 +25,11 @@
                     <td>{{favorite.updateAt.strftime('%Y-%m-%d %H:%M')}}</td>
                     <td>{{favorite.createdAt.strftime('%Y-%m-%d %H:%M')}}</td>
                     {% if current_user.id == favorite.user_id %}
-                    <td><form action="{{ url_for('deleteFavoriteThing',thing_id=favorite.id) }}" method="POST">
+                    <td><form action="{{ url_for('favorites.deleteFavoriteThing',thing_id=favorite.id) }}" method="POST">
                         <input class="btn btn-danger btn-xs" value="Delete"  type="submit"></td>
                     </form>   
                     <td>
-                      <a class="btn btn-primary btn-xs" href="{{ url_for('updateFavoriteThing',thing_id=favorite.id) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                      <a class="btn btn-primary btn-xs" href="{{ url_for('favorites.updateFavoriteThing',thing_id=favorite.id) }}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
                     </td>
                     {% endif %}
                 </tr>
@@ -40,9 +40,9 @@
             {%for page_num in favorites.iter_pages(left_edge=1,right_edge=1,left_current=1,right_current=2)%}
             {% if page_num %}
             {% if favorites.page == page_num %}
-            <a class="btn btn-info mb-4" href="{{url_for('home',page=page_num)}}">{{page_num}}</a>
+            <a class="btn btn-info mb-4" href="{{url_for('main.home',page=page_num)}}">{{page_num}}</a>
             {%else%}
-            <a class="btn btn-outline-info mb-4" href="{{url_for('home',page=page_num)}}">{{page_num}}</a>
+            <a class="btn btn-outline-info mb-4" href="{{url_for('main.home',page=page_num)}}">{{page_num}}</a>
             {%endif%}
             {%else%}
             ....
