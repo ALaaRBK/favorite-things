@@ -8,13 +8,18 @@ from datetime import datetime
 from favoriteThings.utils import addLog
 categories = Blueprint('categories',__name__)
 
-@categories.route('/createCategory',methods=['POST'])
+@categories.route('/createCategory',methods=['POST','GET'])
 @login_required
 def createCategory():
     if not current_user.is_authenticated:
             return redirect(url_for('main.home'))
     newCategory = request.form.get('category')
     rate = int(float(request.form.get('rate')))
+    checkCategory = Categories.query.filter_by(name=newCategory,user_id=current_user.id).first()
+    if checkCategory:
+        create_category=CreateCategory()
+        flash('Category already exist','danger')
+        return  jsonify(success=False,error='Category already exist')
     if newCategory:
         new = Categories(name=newCategory,user_id=current_user.id,rate=rate)
         db.session.add(new)
@@ -30,9 +35,9 @@ def deleteCategory(category_id):
     if not current_user.is_authenticated:
             return redirect(url_for('main.home'))
     category = Categories.query.get_or_404(category_id)
-    favorites = Favorites.query.filter_by(rate=category.rate).all()
+    favorites = Favorites.query.filter_by(category=category.id).all()
     if len(favorites) != 0 :
-        flash('you cant\'t Deleted','danger')
+        flash('you can\'t Deleted','danger')
         return redirect(url_for('favorites.create'))
     if category.user_id != current_user.id:
         abort(403)
