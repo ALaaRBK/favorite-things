@@ -1,0 +1,57 @@
+{
+    "anagraphic":{
+        "fullname":{
+            "first": "Alaa",
+            "middle": "Esmaeel",
+            "last": "Hasan"
+        },
+        "borndate":{
+            "day": 13,
+            "month": 9,
+            "year": 1994
+        },
+        "nationality": "Jordanian",
+        "bio": "I received my Bachelor Degree in computer science in Jan 2017,  I always loved solving problems, writing code .",
+        "qualifications": ["Computer science"]
+    },
+    "digitalidentity":{
+        "telephone": "+692791468837",
+        "email": "alshyoukhi94@gmail.com",
+        "profiles":[
+            {
+                "platform": "GitHub",
+                "link": "https://github.com/AlaaRBK",
+                "description": "The home of my projects!"
+            },
+            {
+                "platform": "LinkedIn",
+                "link": "https://www.linkedin.com/in/alaa-alshyoukhi-b11244153/",
+                "description": "Offer me a job!"
+            }
+        ]
+    },
+    "projects":[
+        {
+            "title": "Refugees-Foreign-Helper-",
+            "name": "Refugees Foreign Helper-",
+            "description": "it's about community for refugees to help them to find housing to stay on it for free and to communicate with foreign using translation feature",
+            "date": {
+                "day": 21,
+                "month": 11,
+                "year": 2017
+            },
+            "link": "https://github.com/ALaaRBK/Refugees-Foreign-Helper-"
+        },
+        {
+            "title": "powerPortGreat",
+            "name": "powerPortGreat",
+            "description": "Powerport website is a website For people who want to travel, But they didn't decide where they will travel , our website help them to decide which city is good for them to travel depending on specific categories like cost , security and weather .",
+            "date": {
+                "day": 10,
+                "month": 7,
+                "year": 2017
+            },
+            "link": "https://github.com/galatolofederico/torchsnn"
+        }
+    ]
+}
