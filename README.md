@@ -22,7 +22,7 @@ This project has its database designed with 4 main entities:
 - **Logs**: Store all logs for the user activity
 
 #  The entity relationship diagram
-(media/relationship_diagram.jpg.png)
+![relationship_diagram](media/relationship_diagram.jpg)
 
 So, a User has Clients, a Client has Products, a Product has FeatureRequest's and ProductArea's, and each FeatureRequest is assigned to a specific Product for a specific ProductArea.
 
