@@ -10,6 +10,6 @@ class CreateCategory(FlaskForm):
     submit = SubmitField('Add')
 
     def validate_newCategory(self,newCategory):
-        category = Categories.query.filter_by(newCategory=newCategory.data).first()
+        category = Categories.query.filter_by(name=newCategory.data).first()
         if category:
             raise ValidationError('Category name Already Exist')

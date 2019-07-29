@@ -30,7 +30,7 @@ class Favorites(db.Model):
 
 
     def __repr__(self):
-        return f"Favorites('{self.title}','{self.createdAt}','{self.description}','{self.user_id}','{self.updateAt})"
+        return f"Favorites('{self.title}','{self.createdAt}','{self.description}','{self.user_id}','{self.updateAt},'{self.meta_data})"
 class Categories(db.Model):
     id=db.Column(db.Integer,primary_key=True)
     name=db.Column(db.String(20),nullable=False)
@@ -38,7 +38,7 @@ class Categories(db.Model):
     user_id = db.Column(db.Integer,db.ForeignKey('user.id'),nullable=False)
     favorites = db.relationship('Favorites',backref='group',lazy=True)
     def __repr__(self):
-        return f"Categories('{self.name}','{self.rate}')"
+        return f"Categories('{self.name}','{self.rate}','{self.user_id}')"
 
 class AuditLog(db.Model):
     id=db.Column(db.Integer,primary_key=True)

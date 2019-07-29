@@ -68,7 +68,7 @@ def updatecategory(category_id):
     create_category=CreateCategory()
     if request.method == 'POST':
         # here we check if category is None because we can't validate in the validation method(we fill category from routes)
-        if create_category.validate_on_submit() or create_category.category.data != None:
+        if create_category.validate_on_submit() or create_category.newCategory.data != None:
             categories.name=create_category.newCategory.data
             categories.rate=create_category.rate.data
             categories.user_id=current_user.id

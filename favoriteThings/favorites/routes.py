@@ -15,17 +15,14 @@ def create():
             return redirect(url_for('main.home'))
     form = Create()
     create_category=CreateCategory()
-    # this section of getting categories to list them in the popup  
+    # this section of getting categories to list them in categories choices  
     categories =Categories.query.filter_by(user_id=current_user.id).all()
     categoriesList = []
     for category in categories:
         categoriesList.append((category.name,category.name))
-    #here we check if category is None because we can't validate in the validation method(we fill category from routes) 
-    if form.validate_on_submit() or (form.category.data is not None and request.method == 'POST'):
+    form.category.choices = categoriesList
+    if form.validate_on_submit():
         category = Categories.query.filter_by(name=form.category.data).first()
-        if form.description.data and len(form.description.data) < 10:
-            form.description.errors.append('Description Field must be minimum 10 and 20 characters long')
-            return render_template('create.html',title='Create',form=form,categoryForm=CreateCategory,categories=categories)
         favoriteThing = Favorites(title=form.title.data,description=form.description.data,meta_data=form.metadata.data,user_id=current_user.id,createdAt=datetime.utcnow(),group=category)
         db.session.add(favoriteThing)
         db.session.commit()
@@ -68,15 +65,15 @@ def updateFavoriteThing(thing_id):
     form = Create()
     create_category=CreateCategory()
     if request.method == 'POST':
-        # here we check if category is None because we can't validate in the validation method(we fill category from routes)
-        if form.validate_on_submit() or form.category.data != None:
+        form.category.choices = categoriesList
+        if form.validate_on_submit():
             category = Categories.query.filter_by(name=form.category.data).first()
             favoriteThing.title=form.title.data
             favoriteThing.description=form.description.data
             favoriteThing.meta_data=form.metadata.data
             favoriteThing.user_id=current_user.id
             favoriteThing.updateAt=datetime.utcnow()
-            favoriteThing.rate=category.rate
+            favoriteThing.category=category.id
             db.session.commit()
             next_page = request.args.get('next')
             log = f'Update {form.title.data} from favorite list on'
@@ -88,6 +85,7 @@ def updateFavoriteThing(thing_id):
         form.description.data = favoriteThing.description
         form.category.choices = categoriesList
         form.category.data = favoriteThing.group.name
+        form.metadata.data = favoriteThing.meta_data
         log = f'Open {form.title.data} to Update it on'
         addLog(log)
         return render_template('create.html',title='Update',form=form,favoriteThing=favoriteThing,categoryForm=create_category,categories=categories)
