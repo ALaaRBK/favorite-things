@@ -18,5 +18,5 @@ class Create(FlaskForm):
         print(len(description.data))
         if description.data:
             if len(description.data) < 10:
-                raise ValidationError('Description Field must be minimum 10 and 20 characters long')
+                raise ValidationError('Description Field must be minimum 10 characters long')
 
