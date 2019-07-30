@@ -23,4 +23,16 @@ $(document).ready(function () {
             }
         })
     });
+    $("#addField").click(function () {
+        var name = $("#fieldName").val()
+        var type = $("#type").val()
+        if(name){
+            $("#fieldName").val("")
+            $(".Fields").append('<div> <label class="form-control-label" for="'+name+'">\
+            '+ name +'</label>\
+                                             <input required class="form-control" type="'+ type + '" name='+ type +'-meta-'+ name + ' id="'+ name+'"></div>')
+        }
+        
+
+    });
 });

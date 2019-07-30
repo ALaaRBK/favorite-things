@@ -31,5 +31,6 @@ def create_app(config_class=Config):
     app.register_blueprint(categories)
     app.register_blueprint(main)
     app.register_blueprint(logs)
-    
+    # db.create_all()
+
     return app

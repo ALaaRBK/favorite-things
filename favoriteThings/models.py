@@ -25,7 +25,7 @@ class Favorites(db.Model):
     createdAt=db.Column(db.DateTime,nullable=False)
     user_id = db.Column(db.Integer,db.ForeignKey('user.id'),nullable=False)
     updateAt = db.Column(db.DateTime,nullable=False,default=datetime.utcnow)
-    meta_data= db.Column(db.String(),nullable=True)
+    meta_data= db.Column(db.PickleType(),nullable=True)
     category = db.Column(db.Integer,db.ForeignKey('categories.id'),nullable=False)
 
 

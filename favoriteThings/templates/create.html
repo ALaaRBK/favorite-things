@@ -32,19 +32,41 @@
                     {{form.description(class="form-control")}}
                     {% endif %}
             </div>
-            <div class="form-group">
-                    {{form.metadata.label(class="form-control-label")}}
-                    {% if form.metadata.errors %}
-                    {{form.metadata(class="form-control is-invalid")}}
-                    <div class="invalid-feedback">
-                        {% for error  in form.metadata.errors %}.
-                        <span> {{error}} </span>
-                        {%endfor%}
-                    </div>
-                    {% else %}
-                    {{form.metadata(class="form-control")}}
-                    {% endif %}
-            </div>
+            <div>
+                <label for="Metadata"><h4>
+
+                  Metadata
+                </h4>
+                </label>
+              </div>
+            <span class="Fields">
+                <label class="form-control-label" for="Filed Type">Filed Type</label>
+                <select id="type" class="form-control">
+                  <option value="color">color</option>
+                  <option value="date">date</option>
+                  <option value="email">email</option>
+                  <option value="number">number</option>
+                  <option value="text">text</option>
+                  <option value="time">time</option>
+                  <option value="url">url</option>
+
+                </select>
+                <label class="form-control-label for="Filed Name">Filed Name</label>
+                <input class="form-control" type="text" id="fieldName">
+                <br>
+              <button type="button" class="btn btn-primary"  id="addField">add Field</button>
+              {% if metadata %}
+                {% for inputType,inputs in metadata.items() %}
+                    {% for inputname,inputValue in inputs.items() %}
+                        <div> <label class="form-control-label" for="{{inputname}}">
+                            {{inputname}}</label>
+                             <input class="form-control" type="{{inputType}}" name="{{inputType}}-meta-{{inputname}}" id="{{inputname}}" value="{{inputValue}}" required></div>
+                    {% endfor %}
+                {% endfor %}
+                {% endif %}
+              </span>
+              <br>
+              <br>
             <div class="form-group">
                     <!-- Button trigger modal -->
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createCategory">
@@ -63,7 +85,7 @@
                     {% else %}
                     {{form.category(class="form-control")}}
                     {% endif %}
-            </div>
+                  </div>
         </fieldset>
         <div class="form-group">
             {{form.submit(class="btn btn-primary")}}
@@ -112,8 +134,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <!-- {{categoryForm.submit(class="btn btn-primary")}} -->
-              <button type="button" id="addCategory"  class="btn btn-primary">Save changes</button>
+              {{categoryForm.submit(class="btn btn-primary")}}
             </div>
             </form>
             <ul class="list-group">

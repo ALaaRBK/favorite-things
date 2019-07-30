@@ -21,7 +21,20 @@
                     <td>{{favorite.description}}</td>
                     <td>{{favorite.group.name}}</td>
                     <td>{{favorite.group.rate}}</td>
-                    <td>{{favorite.meta_data}}</td>
+                    <td>
+                    {% if favorite.meta_data %}
+                    {% for inputType,inputs in favorite.meta_data.items() %}
+                        {% for inputname,inputValue in inputs.items() %}
+
+                          <ul>
+                            <li>
+                              {{inputname}} {{inputValue}}
+                            </li>
+                          </ul>
+                          {% endfor %}
+                          {% endfor %}
+                          {% endif %}
+                        </td>
                     <td>{{favorite.updateAt.strftime('%Y-%m-%d %H:%M')}}</td>
                     <td>{{favorite.createdAt.strftime('%Y-%m-%d %H:%M')}}</td>
                     {% if current_user.id == favorite.user_id %}

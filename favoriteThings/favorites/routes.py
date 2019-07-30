@@ -22,14 +22,20 @@ def create():
         categoriesList.append((category.name,category.name))
     form.category.choices = categoriesList
     if form.validate_on_submit():
+        requestForm = request.form
+        metaData = {}
+        for data in requestForm:
+            if '-meta-' in data:
+                typeAndName = data.split("-meta-") #to get type and name of fileds from request
+                metaData[typeAndName[0]] = {typeAndName[1] : request.form[data]}#store type filed, key and value we store type for viewing in front end 
         category = Categories.query.filter_by(name=form.category.data).first()
-        favoriteThing = Favorites(title=form.title.data,description=form.description.data,meta_data=form.metadata.data,user_id=current_user.id,createdAt=datetime.utcnow(),group=category)
+        favoriteThing = Favorites(title=form.title.data,description=form.description.data,meta_data=metaData,user_id=current_user.id,createdAt=datetime.utcnow(),group=category)
         db.session.add(favoriteThing)
         db.session.commit()
         next_page = request.args.get('next')
         log = f'Add {favoriteThing.title} to favorite list on!'
         addLog(log)
-        return redirect(next_page) if next_page else redirect(url_for('main.home'))
+        return redirect(next_page) if next_page else redirect(url_for('favorites.create'))
     form.category.choices = categoriesList
     log = 'open create form on'
     addLog(log)
@@ -64,13 +70,19 @@ def updateFavoriteThing(thing_id):
         categoriesList.append((category.name,category.name))
     form = Create()
     create_category=CreateCategory()
+    requestForm = request.form
+    metaData = {}
+    for data in requestForm:
+        if '-meta-' in data:
+            typeAndName = data.split("-meta-") #to get type and name of fileds from request
+            metaData[typeAndName[0]] = {typeAndName[1] : request.form[data]}#store type filed, key and value we store type for viewing in front end 
     if request.method == 'POST':
         form.category.choices = categoriesList
         if form.validate_on_submit():
             category = Categories.query.filter_by(name=form.category.data).first()
             favoriteThing.title=form.title.data
             favoriteThing.description=form.description.data
-            favoriteThing.meta_data=form.metadata.data
+            favoriteThing.meta_data=metaData
             favoriteThing.user_id=current_user.id
             favoriteThing.updateAt=datetime.utcnow()
             favoriteThing.category=category.id
@@ -85,8 +97,8 @@ def updateFavoriteThing(thing_id):
         form.description.data = favoriteThing.description
         form.category.choices = categoriesList
         form.category.data = favoriteThing.group.name
-        form.metadata.data = favoriteThing.meta_data
+        metadata = favoriteThing.meta_data
         log = f'Open {form.title.data} to Update it on'
         addLog(log)
-        return render_template('create.html',title='Update',form=form,favoriteThing=favoriteThing,categoryForm=create_category,categories=categories)
+        return render_template('create.html',title='Update',form=form,favoriteThing=favoriteThing,categoryForm=create_category,categories=categories,metadata=metadata)
 
