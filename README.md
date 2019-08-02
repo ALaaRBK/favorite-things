@@ -24,7 +24,6 @@ This project has its database designed with 4 main entities:
 #  The entity relationship diagram
 ![relationship_diagram](media/relationship_diagram.jpg)
 
-So, a User has Clients, a Client has Products, a Product has FeatureRequest's and ProductArea's, and each FeatureRequest is assigned to a specific Product for a specific ProductArea.
 
 ### Backend
 The project utilizes Flask Blueprints to separate the backend logic into the following packages:
